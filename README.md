@@ -4,7 +4,7 @@ A full-stack application for managing advertising campaigns and tracking interna
 
 ## Live Demo
 * **Frontend (Live App):** [https://campaign-app-xi.vercel.app/](https://campaign-app-xi.vercel.app/)
-* **Backend API:** [https://twoja-nazwa.onrender.com](https://campaign-app-xx6w.onrender.com)
+* **Backend API:** [https://campaign-app-xx6w.onrender.com](https://campaign-app-xx6w.onrender.com)
 
 * ⚠️ Note on Live Demo: The backend is hosted on a free Render tier. The initial load may take up to 1-2 minutes as the server wakes up.
 
