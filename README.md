@@ -2,6 +2,10 @@
 
 A full-stack application for managing advertising campaigns and tracking internal Emerald Account balances.
 
+## Live Demo
+* **Frontend:** [https://campaign-app-xi.vercel.app/](https://campaign-app-xi.vercel.app/)
+* **Backend API:** [https://twoja-nazwa.onrender.com](https://campaign-app-xx6w.onrender.com)
+
 ## Architecture & Design Patterns
 
 * **DTO (Data Transfer Object):** Implemented using Java `record` types to separate database entities (`Campaign`) from the REST API payload (`CampaignDto`).
@@ -28,4 +32,6 @@ A full-stack application for managing advertising campaigns and tracking interna
 ### Editing Form
 
 <img width="2278" height="1683" alt="image" src="https://github.com/user-attachments/assets/77076b6a-fa81-4a2f-9418-f9ce07f6307a" />
+
+
 
