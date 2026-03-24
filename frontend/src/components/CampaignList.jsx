@@ -8,7 +8,7 @@ export default function CampaignList({ fetchBalance }) {
     const fetchCampaigns = () => {
         api.get('/campaigns')
             .then(response => setCampaigns(response.data))
-            .catch(error => console.error("Błąd pobierania kampanii:", error));
+            .catch(error => console.error("Error loading campaign:", error));
     };
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export default function CampaignList({ fetchBalance }) {
     }, []);
 
     const handleDelete = (id) => {
-        if (window.confirm("Czy na pewno chcesz usunąć tę kampanię? Środki zostaną zwrócone na konto.")) {
+        if (window.confirm("Are you sure you want to delete this campaign?. Funds will be returned to your account")) {
             api.delete(`/campaigns/${id}`)
                 .then(() => {
                     fetchCampaigns();
@@ -28,20 +28,20 @@ export default function CampaignList({ fetchBalance }) {
 
     return (
         <div>
-            <h2>Lista Twoich Kampanii</h2>
+            <h2>List of your Campaigns</h2>
             {campaigns.length === 0 ? (
-                <p>Brak kampanii. Dodaj pierwszą!</p>
+                <p>No campaigns. Add your first</p>
             ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                     <thead>
                     <tr style={{ backgroundColor: '#f8f9fa', textAlign: 'left' }}>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Nazwa</th>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Słowa kluczowe</th>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Bid (PLN)</th>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Budżet</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Campaign name</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Keywords</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Bid amount ($)</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Campaign Fund</th>
                         <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Status</th>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Miasto (Promień)</th>
-                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Akcje</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>City (Radius)</th>
+                        <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,12 +61,12 @@ export default function CampaignList({ fetchBalance }) {
                                 <Link
                                     to={`/edit/${camp.id}`}
                                     style={{ marginRight: '10px', textDecoration: 'none', color: '#ffc107' }}>
-                                    Edytuj
+                                    Edit
                                 </Link>
                                 <button
                                     onClick={() => handleDelete(camp.id)}
                                     style={{ background: 'none', border: 'none', color: '#dc3545', cursor: 'pointer', textDecoration: 'underline' }}>
-                                    Usuń
+                                    Delete
                                 </button>
                             </td>
                         </tr>

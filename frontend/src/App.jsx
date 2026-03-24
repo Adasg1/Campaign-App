@@ -28,13 +28,13 @@ function App() {
             <div>
               <h1 style={{ margin: 0 }}>Emerald Campaigns</h1>
               <nav style={{ marginTop: '10px' }}>
-                <Link to="/" style={{ marginRight: '15px', textDecoration: 'none', color: '#007bff' }}>Wszystkie kampanie</Link>
-                <Link to="/add" style={{ textDecoration: 'none', color: '#007bff' }}>Dodaj nową</Link>
+                <Link to="/" style={{ marginRight: '15px', textDecoration: 'none', color: '#007bff' }}>All Campaigns</Link>
+                <Link to="/add" style={{ textDecoration: 'none', color: '#007bff' }}>Add new</Link>
               </nav>
             </div>
             <div style={{ backgroundColor: '#e6f4ea', padding: '15px', borderRadius: '8px', border: '1px solid #ceead6' }}>
               <span style={{ display: 'block', fontSize: '12px', color: '#5f6368', textTransform: 'uppercase' }}>Emerald Account Funds</span>
-              <strong style={{ fontSize: '24px', color: '#137333' }}>{balance.toFixed(2)} PLN</strong>
+              <strong style={{ fontSize: '24px', color: '#137333' }}>{balance.toFixed(2)} $</strong>
             </div>
           </header>
 

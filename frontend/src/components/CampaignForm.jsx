@@ -45,7 +45,7 @@ export default function CampaignForm({ fetchBalance }) {
                         radius: camp.radius
                     });
                 })
-                .catch(err => console.error("Błąd pobierania kampanii:", err));
+                .catch(err => console.error("Error fetching campaign:", err));
         }
     }, [id, isEditMode]);
 
@@ -83,11 +83,11 @@ export default function CampaignForm({ fetchBalance }) {
                 navigate('/');
             })
             .catch(error => {
-                console.error("Błąd zapisu:", error);
+                console.error("Error saving:", error);
                 if (error.response && error.response.data && error.response.data.message) {
                     setErrorMessage(error.response.data.message);
                 } else {
-                    setErrorMessage("Wystąpił błąd podczas zapisywania kampanii. Sprawdź konsole.");
+                    setErrorMessage("An error occurred while saving the campaign. Check the console.");
                 }
             });
     };
@@ -98,7 +98,7 @@ export default function CampaignForm({ fetchBalance }) {
 
     return (
         <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-            <h2>{isEditMode ? 'Edytuj Kampanię' : 'Dodaj Nową Kampanię'}</h2>
+            <h2>{isEditMode ? 'Edit Campaign' : 'Add New Campaign'}</h2>
 
             {errorMessage && (
                 <div style={{ backgroundColor: '#f8d7da', color: '#721c24', padding: '10px', marginBottom: '15px', borderRadius: '5px' }}>
@@ -108,30 +108,30 @@ export default function CampaignForm({ fetchBalance }) {
 
             <form onSubmit={handleSubmit}>
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Nazwa kampanii *</label>
+                    <label style={labelStyle}>Campaign Name *</label>
                     <input type="text" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
                 </div>
 
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Słowa kluczowe (Typeahead) *</label>
+                    <label style={labelStyle}>Keywords (Typeahead) *</label>
                     <Select
                         isMulti
                         name="keywords"
                         options={keywordOptions}
                         value={formData.keywords}
                         onChange={handleKeywordsChange}
-                        placeholder="Zacznij wpisywać..."
+                        placeholder="Start typing..."
                         required={formData.keywords.length === 0}
                     />
                 </div>
 
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Bid amount (min. 10 PLN) *</label>
+                    <label style={labelStyle}>Bid amount (min. 10 $) *</label>
                     <input type="number" step="0.01" min="10" name="bidAmount" value={formData.bidAmount} onChange={handleChange} style={inputStyle} required />
                 </div>
 
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Budżet kampanii (Fund) *</label>
+                    <label style={labelStyle}>Campaign Fund *</label>
                     <input
                         type="number"
                         step="0.01"
@@ -142,7 +142,7 @@ export default function CampaignForm({ fetchBalance }) {
                         style={inputStyle}
                         required
                         disabled={isEditMode}
-                        title={isEditMode ? "Nie można zmieniać budżetu istniejącej kampanii" : ""}
+                        title={isEditMode ? "Cannot change the fund of an existing campaign" : ""}
                     />
                 </div>
 
@@ -153,24 +153,24 @@ export default function CampaignForm({ fetchBalance }) {
                 </div>
 
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Miasto *</label>
+                    <label style={labelStyle}>Town *</label>
                     <select name="town" value={formData.town} onChange={handleChange} style={inputStyle} required>
-                        <option value="">-- Wybierz miasto --</option>
+                        <option value="">-- Select town --</option>
                         {townOptions.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
                 </div>
 
                 <div style={formGroupStyle}>
-                    <label style={labelStyle}>Promień (km) *</label>
+                    <label style={labelStyle}>Radius (km) *</label>
                     <input type="number" min="1" name="radius" value={formData.radius} onChange={handleChange} style={inputStyle} required />
                 </div>
 
                 <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
                     <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                        Zapisz kampanię
+                        Save Campaign
                     </button>
                     <button type="button" onClick={() => navigate('/')} style={{ padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                        Anuluj
+                        Cancel
                     </button>
                 </div>
             </form>
