@@ -1,6 +1,6 @@
 package com.campaign.backend.controller;
 
-import com.campaign.backend.model.Campaign;
+import com.campaign.backend.dto.CampaignDto;
 import com.campaign.backend.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,29 +10,33 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/campaigns")
-@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class CampaignController {
 
     private final CampaignService campaignService;
 
+    @GetMapping("/{id}")
+    public CampaignDto getById(@PathVariable Long id) {
+        return campaignService.getCampaignDtoById(id);
+    }
+
     @GetMapping
-    public List<Campaign> getAll() {
-        return campaignService.getAllCampaigns(); // Pobieramy przez serwis
+    public List<CampaignDto> getAll() {
+        return campaignService.getAllCampaigns();
     }
 
     @PostMapping
-    public Campaign create(@Valid @RequestBody Campaign campaign) {
-        return campaignService.createCampaign(campaign);
+    public CampaignDto create(@Valid @RequestBody CampaignDto campaignDto) {
+        return campaignService.createCampaign(campaignDto);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        campaignService.deleteCampaign(id); // Teraz używamy serwisu, więc środki wrócą na konto!
+        campaignService.deleteCampaign(id);
     }
 
     @PutMapping("/{id}")
-    public Campaign update(@PathVariable Long id, @Valid @RequestBody Campaign campaign) {
-        return campaignService.updateCampaign(id, campaign);
+    public CampaignDto update(@PathVariable Long id, @Valid @RequestBody CampaignDto campaignDto) {
+        return campaignService.updateCampaign(id, campaignDto);
     }
 }

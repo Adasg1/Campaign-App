@@ -1,5 +1,6 @@
 package com.campaign.backend.service;
 
+import com.campaign.backend.dto.CampaignDto;
 import com.campaign.backend.model.Campaign;
 import com.campaign.backend.repository.CampaignRepository;
 import jakarta.transaction.Transactional;
@@ -7,50 +8,68 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CampaignService {
 
     private final CampaignRepository campaignRepository;
-    private final AccountService accountService; // Wstrzykujemy AccountService!
+    private final AccountService accountService;
 
-    public List<Campaign> getAllCampaigns() {
-        return campaignRepository.findAll();
+    public List<CampaignDto> getAllCampaigns() {
+        return campaignRepository.findAll().stream()
+                .map(CampaignDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public Campaign getCampaignById(Long id) {
+    public CampaignDto getCampaignDtoById(Long id) {
+        return CampaignDto.fromEntity(getCampaignEntityById(id));
+    }
+
+    private Campaign getCampaignEntityById(Long id) {
         return campaignRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono kampanii o id: " + id));
+                .orElseThrow(() -> new RuntimeException("Campaign with id: " + id +  " not found"));
     }
 
     @Transactional
-    public Campaign createCampaign(Campaign campaign) {
-        // Zlecamy pobranie środków z konta - metoda rzuci wyjątek, jeśli brakuje kasy
-        accountService.deductFunds(campaign.getCampaignFund());
+    public CampaignDto createCampaign(CampaignDto dto) {
 
-        return campaignRepository.save(campaign);
+        if (campaignRepository.existsByName(dto.name())) {
+            throw new RuntimeException("Campaign with name: '" + dto.name() + "' already exists");
+        }
+
+        accountService.deductFunds(dto.campaignFund());
+
+        Campaign campaign = CampaignDto.toEntity(dto);
+        Campaign savedCampaign = campaignRepository.save(campaign);
+
+        return CampaignDto.fromEntity(savedCampaign);
     }
 
     @Transactional
-    public Campaign updateCampaign(Long id, Campaign details) {
-        Campaign campaign = getCampaignById(id);
+    public CampaignDto updateCampaign(Long id, CampaignDto details) {
+        if (campaignRepository.existsByNameAndIdNot(details.name(), id)) {
+            throw new RuntimeException("Other Campaign with name: '" + details.name() + "' already exists");
+        }
 
-        campaign.setName(details.getName());
-        campaign.setKeywords(details.getKeywords());
-        campaign.setBidAmount(details.getBidAmount());
-        campaign.setStatus(details.getStatus());
-        campaign.setTown(details.getTown());
-        campaign.setRadius(details.getRadius());
+        Campaign campaign = getCampaignEntityById(id);
 
-        return campaignRepository.save(campaign);
+        campaign.setName(details.name());
+        campaign.setKeywords(details.keywords());
+        campaign.setBidAmount(details.bidAmount());
+        campaign.setStatus(details.status());
+        campaign.setTown(details.town());
+        campaign.setRadius(details.radius());
+
+        Campaign updatedCampaign = campaignRepository.save(campaign);
+        return CampaignDto.fromEntity(updatedCampaign);
     }
 
     @Transactional
     public void deleteCampaign(Long id) {
-        Campaign campaign = getCampaignById(id);
+        Campaign campaign = getCampaignEntityById(id);
 
-        // Zwracamy środki na konto przy usuwaniu
         accountService.addFunds(campaign.getCampaignFund());
 
         campaignRepository.delete(campaign);

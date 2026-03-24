@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { api } from './api';
 
-// Te komponenty stworzymy w następnym kroku!
 import CampaignList from './components/CampaignList';
 import CampaignForm from './components/CampaignForm';
 
 function App() {
   const [balance, setBalance] = useState(0);
 
-  // Funkcja pobierająca aktualne saldo
   const fetchBalance = () => {
     api.get('/account/balance')
         .then(response => {
@@ -18,7 +16,6 @@ function App() {
         .catch(error => console.error("Błąd pobierania salda:", error));
   };
 
-  // Pobierz saldo przy pierwszym uruchomieniu
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -27,7 +24,6 @@ function App() {
       <BrowserRouter>
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px', fontFamily: 'sans-serif' }}>
 
-          {/* NAGŁÓWEK */}
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px' }}>
             <div>
               <h1 style={{ margin: 0 }}>Emerald Campaigns</h1>
@@ -42,7 +38,6 @@ function App() {
             </div>
           </header>
 
-          {/* MIEJSCE NA WIDOKI (LISTA / FORMULARZ) */}
           <main>
             <Routes>
               <Route path="/" element={<CampaignList fetchBalance={fetchBalance} />} />

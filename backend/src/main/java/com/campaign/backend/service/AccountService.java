@@ -17,13 +17,12 @@ public class AccountService {
                 .orElse(BigDecimal.ZERO);
     }
 
-    // Ta metoda przyda się później, gdy będziemy tworzyć kampanię!
     public void deductFunds(BigDecimal amount) {
         EmeraldAccount account = accountRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Konto nie istnieje"));
+                .orElseThrow(() -> new RuntimeException("Account not found"));
 
         if (account.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("Niewystarczające środki na koncie Emerald");
+            throw new RuntimeException("Not enough funds on Emerald Account");
         }
 
         account.setBalance(account.getBalance().subtract(amount));
@@ -32,9 +31,8 @@ public class AccountService {
 
     public void addFunds(BigDecimal amount) {
         EmeraldAccount account = accountRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Konto nie istnieje"));
+                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        // BigDecimal wymaga metody .add() do dodawania
         account.setBalance(account.getBalance().add(amount));
         accountRepository.save(account);
     }

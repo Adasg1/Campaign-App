@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Select from 'react-select'; // Importujemy bibliotekę do typeahead
+import Select from 'react-select';
 import { api } from '../api';
 
 export default function CampaignForm({ fetchBalance }) {
     const navigate = useNavigate();
-    const { id } = useParams(); // Jeśli w URL jest /edit/1, to id = 1
+    const { id } = useParams();
     const isEditMode = Boolean(id);
 
-    // Stan formularza
     const [formData, setFormData] = useState({
         name: '',
-        keywords: [], // Tu będziemy trzymać wybrane obiekty z react-select
+        keywords: [],
         bidAmount: '',
         campaignFund: '',
         status: true,
@@ -19,31 +18,25 @@ export default function CampaignForm({ fetchBalance }) {
         radius: ''
     });
 
-    // Stan na słowniki z backendu
     const [townOptions, setTownOptions] = useState([]);
     const [keywordOptions, setKeywordOptions] = useState([]);
 
-    // Stan na błędy
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        // 1. Pobieramy słowniki
         api.get('/dictionaries/towns').then(res => setTownOptions(res.data));
 
         api.get('/dictionaries/keywords').then(res => {
-            // react-select wymaga formatu { value: 'coś', label: 'Coś' }
             const formattedKeywords = res.data.map(kw => ({ value: kw, label: kw }));
             setKeywordOptions(formattedKeywords);
         });
 
-        // 2. Jeśli to edycja, pobieramy dane kampanii
         if (isEditMode) {
             api.get(`/campaigns/${id}`)
                 .then(res => {
                     const camp = res.data;
                     setFormData({
                         name: camp.name,
-                        // Formatujemy słowa kluczowe z powrotem do formatu react-select
                         keywords: camp.keywords.map(kw => ({ value: kw, label: kw })),
                         bidAmount: camp.bidAmount,
                         campaignFund: camp.campaignFund,
@@ -56,7 +49,6 @@ export default function CampaignForm({ fetchBalance }) {
         }
     }, [id, isEditMode]);
 
-    // Obsługa standardowych pół tekstowych i selectów
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -65,17 +57,14 @@ export default function CampaignForm({ fetchBalance }) {
         });
     };
 
-    // Obsługa słów kluczowych (react-select)
     const handleKeywordsChange = (selectedOptions) => {
         setFormData({ ...formData, keywords: selectedOptions || [] });
     };
 
-    // Wysyłka formularza
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrorMessage('');
 
-        // Przygotowujemy payload do wysłania (wyciągamy same stringi z react-select)
         const payload = {
             ...formData,
             keywords: formData.keywords.map(k => k.value),
@@ -90,12 +79,11 @@ export default function CampaignForm({ fetchBalance }) {
 
         request
             .then(() => {
-                fetchBalance(); // Zaktualizuj kwotę na górnym pasku!
-                navigate('/');  // Wróć do listy
+                fetchBalance();
+                navigate('/');
             })
             .catch(error => {
                 console.error("Błąd zapisu:", error);
-                // Próba wyciągnięcia wiadomości o błędzie z backendu (np. brak środków)
                 if (error.response && error.response.data && error.response.data.message) {
                     setErrorMessage(error.response.data.message);
                 } else {
@@ -104,7 +92,6 @@ export default function CampaignForm({ fetchBalance }) {
             });
     };
 
-    // Proste style dla formularza
     const formGroupStyle = { marginBottom: '15px' };
     const labelStyle = { display: 'block', marginBottom: '5px', fontWeight: 'bold' };
     const inputStyle = { width: '100%', padding: '8px', boxSizing: 'border-box' };
@@ -154,7 +141,7 @@ export default function CampaignForm({ fetchBalance }) {
                         onChange={handleChange}
                         style={inputStyle}
                         required
-                        disabled={isEditMode} // Blokujemy edycję budżetu, żeby nie komplikować salda!
+                        disabled={isEditMode}
                         title={isEditMode ? "Nie można zmieniać budżetu istniejącej kampanii" : ""}
                     />
                 </div>

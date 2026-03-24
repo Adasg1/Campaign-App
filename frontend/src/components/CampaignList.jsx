@@ -5,7 +5,6 @@ import { api } from '../api';
 export default function CampaignList({ fetchBalance }) {
     const [campaigns, setCampaigns] = useState([]);
 
-    // Funkcja pobierająca listę kampanii
     const fetchCampaigns = () => {
         api.get('/campaigns')
             .then(response => setCampaigns(response.data))
@@ -16,13 +15,12 @@ export default function CampaignList({ fetchBalance }) {
         fetchCampaigns();
     }, []);
 
-    // Funkcja usuwająca kampanię
     const handleDelete = (id) => {
         if (window.confirm("Czy na pewno chcesz usunąć tę kampanię? Środki zostaną zwrócone na konto.")) {
             api.delete(`/campaigns/${id}`)
                 .then(() => {
-                    fetchCampaigns(); // Odśwież listę
-                    fetchBalance();   // Odśwież stan konta na górze ekranu
+                    fetchCampaigns();
+                    fetchBalance();
                 })
                 .catch(error => console.error("Błąd usuwania:", error));
         }
